@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quantenmechanik – Schwerpunktfach Chemie</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:   #2c3e6b;
+      --accent:    #e84393;
+      --accent2:   #f39c12;
+      --light:     #f4f6fb;
+      --white:     #ffffff;
+      --text:      #1a1a2e;
+      --muted:     #6b7280;
+      --border:    #d1d5db;
+      --sidebar-w: 270px;
+      --radius:    10px;
+      --shadow:    0 2px 12px rgba(44,62,107,.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--light);
+      display: flex;
+    }
+
+    /* ===== SIDEBAR ===== */
+    #sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--primary);
+      color: #fff;
+      overflow-y: auto;
+      z-index: 100;
+      padding-bottom: 2rem;
+    }
+
+    #sidebar .logo {
+      padding: 1.5rem 1.2rem 1rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      border-bottom: 1px solid rgba(255,255,255,.15);
+      line-height: 1.4;
+    }
+
+    #sidebar .logo span {
+      display: block;
+      font-size: .78rem;
+      font-weight: 400;
+      opacity: .7;
+      margin-top: .2rem;
+    }
+
+    #sidebar nav ul { list-style: none; padding: .5rem 0; }
+
+    #sidebar nav ul li a {
+      display: block;
+      padding: .5rem 1.2rem;
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+      font-size: .9rem;
+      transition: background .18s, color .18s;
+      border-left: 3px solid transparent;
+    }
+
+    #sidebar nav ul li a:hover,
+    #sidebar nav ul li a.active {
+      background: rgba(255,255,255,.10);
+      color: #fff;
+      border-left-color: var(--accent);
+    }
+
+    #sidebar nav ul li.chapter > a {
+      font-weight: 700;
+      font-size: .95rem;
+      color: #fff;
+      margin-top: .4rem;
+      padding-top: .7rem;
+    }
+
+    #sidebar nav ul li.sub > a {
+      padding-left: 2rem;
+      font-size: .85rem;
+    }
+
+    /* ===== MAIN ===== */
+    #main {
+      margin-left: var(--sidebar-w);
+      padding: 2.5rem 2.5rem 4rem;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* ===== SECTION ===== */
+    section {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.2rem 2.4rem;
+      margin-bottom: 2.5rem;
+    }
+
+    section h1 {
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin-bottom: .3rem;
+    }
+
+    section h2 {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin: 1.8rem 0 .6rem;
+      padding-bottom: .25rem;
+      border-bottom: 2px solid var(--light);
+    }
+
+    section h3 {
+      font-size: 1.05rem;
+      color: var(--primary);
+      margin: 1.2rem 0 .4rem;
+    }
+
+    p { margin-bottom: .9rem; }
+
+    ul, ol {
+      margin: .5rem 0 .9rem 1.5rem;
+    }
+
+    li { margin-bottom: .3rem; }
+
+    strong { color: var(--primary); }
+
+    /* ===== LEARNING GOALS ===== */
+    .lernziele {
+      background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .lernziele h3 {
+      color: var(--primary);
+      margin: 0 0 .6rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .lernziele ul { margin: 0 0 0 1.2rem; }
+    .lernziele li { font-size: .93rem; margin-bottom: .2rem; }
+
+    /* ===== MERKSATZ ===== */
+    .merksatz {
+      background: #fff8e1;
+      border-left: 4px solid var(--accent2);
+      border-radius: var(--radius);
+      padding: 1rem 1.4rem;
+      margin: 1.2rem 0;
+      position: relative;
+    }
+
+    .merksatz::before {
+      content: "📌 Merksatz";
+      display: block;
+      font-weight: 700;
+      color: var(--accent2);
+      font-size: .85rem;
+      margin-bottom: .3rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    /* ===== ZUSAMMENFASSUNG ===== */
+    .zusammenfassung {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      border-radius: var(--radius);
+      padding: 1rem 1.4rem;
+      margin: 1.2rem 0;
+    }
+
+    .zusammenfassung::before {
+      content: "✅ Zusammenfassung";
+      display: block;
+      font-weight: 700;
+      color: #16a34a;
+      font-size: .85rem;
+      margin-bottom: .3rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    /* ===== FORMULA BOX ===== */
+    .formula {
+      background: #f8f9ff;
+      border: 1px solid #c7d2fe;
+      border-radius: var(--radius);
+      padding: .9rem 1.4rem;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 1.05rem;
+      text-align: center;
+      color: var(--primary);
+    }
+
+    /* ===== INTERACTIVE / PHET ===== */
+    .sim-container {
+      background: #f0f4ff;
+      border: 2px dashed #a5b4fc;
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    .sim-container p.sim-label {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-top: .6rem;
+      margin-bottom: 0;
+    }
+
+    .sim-container iframe {
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 800px;
+      height: 480px;
+    }
+
+    /* ===== AUFGABE ===== */
+    .aufgabe {
+      background: #fef2f2;
+      border-left: 4px solid #ef4444;
+      border-radius: var(--radius);
+      padding: 1.1rem 1.4rem;
+      margin: 1.4rem 0;
+    }
+
+    .aufgabe .aufgabe-header {
+      font-weight: 700;
+      color: #dc2626;
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .5rem;
+    }
+
+    /* ===== MC QUIZ ===== */
+    .quiz-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      margin: 1.4rem 0;
+    }
+
+    .quiz-box .quiz-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: .95rem;
+    }
+
+    .quiz-question { margin-bottom: 1.2rem; }
+
+    .quiz-question p {
+      font-weight: 600;
+      margin-bottom: .5rem;
+      font-size: .93rem;
+    }
+
+    .quiz-option {
+      display: flex;
+      align-items: flex-start;
+      gap: .6rem;
+      padding: .45rem .7rem;
+      margin-bottom: .35rem;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background .15s, border-color .15s;
+      font-size: .9rem;
+      user-select: none;
+    }
+
+    .quiz-option:hover { background: #f0f4ff; border-color: #a5b4fc; }
+    .quiz-option.correct { background: #dcfce7; border-color: #86efac; color: #166534; }
+    .quiz-option.wrong   { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+
+    .quiz-option input[type="radio"] { margin-top: .25rem; accent-color: var(--primary); }
+
+    .quiz-feedback {
+      display: none;
+      padding: .6rem 1rem;
+      border-radius: 6px;
+      font-size: .88rem;
+      margin-top: .4rem;
+      font-weight: 600;
+    }
+
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.ok  { background: #dcfce7; color: #166534; }
+    .quiz-feedback.nok { background: #fee2e2; color: #991b1b; }
+
+    .btn-check {
+      margin-top: .8rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: .5rem 1.2rem;
+      font-size: .88rem;
+      cursor: pointer;
+      transition: background .18s;
+    }
+
+    .btn-check:hover { background: #1e2f5a; }
+
+    /* ===== DRAG & DROP ===== */
+    .drag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 1rem 0;
+      align-items: flex-start;
+    }
+
+    .drag-pool {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .drag-pool h4, .drop-zone-group h4 {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: .6rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .drag-item {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      padding: .35rem .75rem;
+      border-radius: 20px;
+      font-size: .85rem;
+      cursor: grab;
+      margin: .25rem;
+      user-select: none;
+      transition: opacity .15s;
+    }
+
+    .drag-item:active { cursor: grabbing; opacity: .7; }
+    .drag-item.placed { opacity: .35; pointer-events: none; }
+
+    .drop-zone-group { flex: 2; min-width: 280px; }
+
+    .drop-row {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      margin-bottom: .7rem;
+    }
+
+    .drop-row .drop-label {
+      min-width: 130px;
+      font-size: .88rem;
+      color: var(--text);
+    }
+
+    .drop-target {
+      min-width: 110px;
+      min-height: 36px;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: .2rem .5rem;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+      transition: border-color .15s, background .15s;
+    }
+
+    .drop-target.over { border-color: var(--accent); background: #fff0f8; }
+    .drop-target.correct-drop { border-color: #22c55e; background: #dcfce7; }
+    .drop-target.wrong-drop   { border-color: #ef4444; background: #fee2e2; }
+
+    .drag-result {
+      margin-top: .8rem;
+      font-size: .88rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .btn-dragcheck, .btn-dragreset {
+      margin-top: .6rem;
+      margin-right: .5rem;
+      border: none;
+      border-radius: 6px;
+      padding: .45rem 1rem;
+      font-size: .85rem;
+      cursor: pointer;
+      transition: background .18s;
+    }
+
+    .btn-dragcheck { background: var(--primary); color: #fff; }
+    .btn-dragcheck:hover { background: #1e2f5a; }
+    .btn-dragreset { background: #e5e7eb; color: var(--text); }
+    .btn-dragreset:hover { background: #d1d5db; }
+
+    /* ===== SPECTRUM BAR ===== */
+    .spectrum-bar {
+      width: 100%;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(to right,
+        #7f00ff 0%, #4400ff 8%, #0000ff 16%, #0080ff 22%,
+        #00bfff 28%, #00ffff 34%, #00ff80 42%,
+        #00ff00 50%, #80ff00 57%, #ffff00 63%,
+        #ffa500 72%, #ff4500 82%, #ff0000 100%);
+      margin: .6rem 0 .2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    }
+
+    .spectrum-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+
+    /* ===== IONIZATION TABLE ===== */
+    table.ion-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+      margin: 1rem 0;
+    }
+
+    table.ion-table th {
+      background: var(--primary);
+      color: #fff;
+      padding: .5rem .8rem;
+      text-align: left;
+    }
+
+    table.ion-table td {
+      padding: .45rem .8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    table.ion-table tr:nth-child(even) td { background: #f8f9ff; }
+    table.ion-table tr:hover td { background: #eef2ff; }
+
+    /* ===== ENERGY LEVEL DIAGRAM ===== */
+    .energy-diagram {
+      background: #0d1b2a;
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin: 1.2rem 0;
+      overflow-x: auto;
+    }
+
+    .energy-diagram svg { display: block; margin: 0 auto; }
+
+    /* ===== POSTULAT CARDS ===== */
+    .postulat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .postulat-card {
+      background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+      border-radius: var(--radius);
+      padding: 1.1rem;
+      border-top: 4px solid var(--primary);
+    }
+
+    .postulat-card .pnum {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .3rem;
+    }
+
+    .postulat-card p { font-size: .88rem; margin: 0; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 760px) {
+      #sidebar { transform: translateX(-100%); transition: transform .25s; }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; padding: 1.2rem; }
+      #menu-toggle {
+        display: flex;
+        position: fixed;
+        top: .8rem; left: .8rem;
+        z-index: 200;
+        background: var(--primary);
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        padding: .45rem .65rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+    }
+
+    @media (min-width: 761px) { #menu-toggle { display: none; } }
+
+    /* ===== SCROLL PROGRESS ===== */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: var(--accent);
+      z-index: 999;
+      transition: width .1s linear;
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<button id="menu-toggle" aria-label="Menü öffnen">☰</button>
+
+<!-- ============================= SIDEBAR ============================= -->
+<nav id="sidebar">
+  <div class="logo">
+    Quantenmechanik
+    <span>Schwerpunktfach Chemie</span>
+  </div>
+  <nav>
+    <ul>
+      <li class="chapter"><a href="#em-strahlung">1 · Elektromagnetische Strahlung</a></li>
+      <li class="sub"><a href="#em-wellenlaenge">1.1 Wellenlänge &amp; Frequenz</a></li>
+      <li class="sub"><a href="#em-weisseslicht">1.2 Weisses Licht &amp; Dispersion</a></li>
+      <li class="sub"><a href="#em-spektrum">1.3 Das elektromagnetische Spektrum</a></li>
+      <li class="sub"><a href="#em-simulation">1.4 PhET-Simulation</a></li>
+      <li class="sub"><a href="#em-aufgaben">1.5 Übungsaufgaben</a></li>
+
+      <li class="chapter"><a href="#bohr">2 · Bohrsches Atommodell</a></li>
+      <li class="sub"><a href="#bohr-quanten">2.1 Gequantelte Energie &amp; Photon</a></li>
+      <li class="sub"><a href="#bohr-planck">2.2 Plancksches Wirkungsquantum</a></li>
+      <li class="sub"><a href="#bohr-dualismus">2.3 Welle-Teilchen-Dualismus</a></li>
+      <li class="sub"><a href="#bohr-modell">2.4 Das Bohr-Modell</a></li>
+      <li class="sub"><a href="#bohr-postulate">2.5 Postulate von Bohr</a></li>
+      <li class="sub"><a href="#bohr-linien">2.6 Linienspektren &amp; Flammenfärbung</a></li>
+      <li class="sub"><a href="#bohr-quiz">2.7 Quiz &amp; Kontrollfragen</a></li>
+      <li class="sub"><a href="#bohr-anwendung">2.8 Anwendungsaufgabe</a></li>
+    </ul>
+  </nav>
+</nav>
+
+<!-- ============================= MAIN ============================= -->
+<main id="main">
+
+  <!-- ============================================================
+       KAPITEL 1: ELEKTROMAGNETISCHE STRAHLUNG
+       ============================================================ -->
+  <section id="em-strahlung">
+    <h1>1 · Elektromagnetische Strahlung</h1>
+
+    <div class="lernziele">
+      <h3>🎯 Lernziele</h3>
+      <ul>
+        <li>Den Begriff elektromagnetische Strahlung erklären und Beispiele nennen.</li>
+        <li>Wellenlänge (λ), Frequenz (ν) und Ausbreitungsgeschwindigkeit (c) definieren und die Beziehung zwischen ihnen anwenden.</li>
+        <li>Erklären, warum weisses Licht ein Gemisch ist und wie es aufgespalten wird.</li>
+        <li>Das elektromagnetische Spektrum beschreiben und Strahlungsarten nach Wellenlänge/Energie ordnen.</li>
+        <li>Den Zusammenhang E = hν qualitativ und quantitativ anwenden.</li>
+      </ul>
+    </div>
+
+    <!-- ---- 1.1 Wellenlänge & Frequenz ---- -->
+    <h2 id="em-wellenlaenge">1.1 Wellenlänge &amp; Frequenz</h2>
+
+    <p>
+      Licht und andere Formen elektromagnetischer Strahlung sind <strong>transversale Wellen</strong>,
+      die sich im Vakuum mit der Lichtgeschwindigkeit
+      <strong>c = 3.00 × 10<sup>8</sup> m/s</strong> ausbreiten.
+      Sie benötigen kein Trägermedium und bestehen aus gekoppelten elektrischen und magnetischen Feldern.
+    </p>
+
+    <h3>Wellenlänge λ (Lambda)</h3>
+    <p>
+      Die <strong>Wellenlänge λ</strong> ist der räumliche Abstand zwischen zwei aufeinanderfolgenden
+      Wellenbergen (oder -tälern). Sie wird in Metern angegeben – für sichtbares Licht
+      typischerweise in Nanometern (1 nm = 10<sup>–9</sup> m).
+    </p>
+
+    <h3>Frequenz ν (Nu)</h3>
+    <p>
+      Die <strong>Frequenz ν</strong> gibt an, wie viele vollständige Schwingungen pro Sekunde an einem
+      Punkt vorbeikommen. Einheit: Hertz (Hz = s<sup>–1</sup>).
+      Hohe Frequenz bedeutet viele Schwingungen pro Sekunde → kurze Wellenlänge.
+    </p>
+
+    <div class="merksatz">
+      Wellenlänge und Frequenz sind <em>umgekehrt proportional</em>:
+      Kürzere Wellenlänge → höhere Frequenz → höhere Energie.
+    </div>
+
+    <div class="formula">
+      c = λ · ν &nbsp;&nbsp;&nbsp; ⟹ &nbsp;&nbsp;&nbsp; λ = c / ν &nbsp;&nbsp;&nbsp; ν = c / λ
+    </div>
+
+    <p style="font-size:.88rem; color:var(--muted);">
+      c = 3.00 × 10<sup>8</sup> m/s &nbsp;|&nbsp; λ in m &nbsp;|&nbsp; ν in Hz
+    </p>
+
+    <!-- ---- 1.2 Weisses Licht ---- -->
+    <h2 id="em-weisseslicht">1.2 Weisses Licht &amp; Dispersion</h2>
+
+    <p>
+      <strong>Weisses Licht</strong> ist ein <em>Gemisch aller sichtbaren Wellenlängen</em>
+      (ca. 380 nm bis 780 nm). Es erscheint weiss, weil unser Auge keine einzelnen Farben mehr unterscheidet,
+      wenn alle zusammen auf die Netzhaut treffen.
+    </p>
+
+    <p>
+      Trifft weisses Licht auf ein Prisma (oder Wassertropfen im Regenbogen), werden die verschiedenen
+      Wellenlängen unterschiedlich stark gebrochen – ein Vorgang namens <strong>Dispersion</strong>.
+      Violettes Licht (kurze λ) wird stärker abgelenkt als rotes Licht (lange λ),
+      sodass ein <strong>kontinuierliches Spektrum</strong> entsteht.
+    </p>
+
+    <div class="spectrum-bar"></div>
+    <div class="spectrum-labels">
+      <span>380 nm (Violett)</span>
+      <span>480 nm (Blau)</span>
+      <span>550 nm (Grün)</span>
+      <span>600 nm (Orange)</span>
+      <span>780 nm (Rot)</span>
+    </div>
+
+    <div class="merksatz">
+      Ein <strong>Prisma</strong> trennt weisses Licht in seine Farben auf, weil jede Wellenlänge einen
+      leicht anderen Brechungsindex hat (Dispersion). Im Vakuum hingegen bewegen sich alle Wellenlängen
+      mit exakt der gleichen Geschwindigkeit c.
+    </div>
+
+    <!-- ---- 1.3 Das elektromagnetische Spektrum ---- -->
+    <h2 id="em-spektrum">1.3 Das elektromagnetische Spektrum</h2>
+
+    <p>
+      Sichtbares Licht ist nur ein schmaler Ausschnitt des <strong>elektromagnetischen Spektrums</strong>.
+      Die folgende Tabelle ordnet die wichtigsten Strahlungsarten nach Wellenlänge:
+    </p>
+
+    <table class="ion-table">
+      <thead>
+        <tr>
+          <th>Strahlungsart</th>
+          <th>Wellenlänge λ</th>
+          <th>Frequenz ν (Hz)</th>
+          <th>Energie pro Photon</th>
+          <th>Anwendung / Beispiel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Radiowellen</td><td>&gt; 1 m</td><td>&lt; 3 × 10⁸</td><td>sehr gering</td><td>UKW-Radio, TV</td></tr>
+        <tr><td>Mikrowellen</td><td>1 mm – 1 m</td><td>3×10⁸ – 3×10¹¹</td><td>gering</td><td>Mikrowellenherd, WLAN</td></tr>
+        <tr><td>Infrarot (IR)</td><td>780 nm – 1 mm</td><td>3×10¹¹ – 4×10¹⁴</td><td>mittel</td><td>Wärmebildkamera, Fernbedienung</td></tr>
+        <tr><td><strong>Sichtbares Licht</strong></td><td><strong>380 – 780 nm</strong></td><td><strong>4–8 × 10¹⁴</strong></td><td><strong>mittel</strong></td><td><strong>menschliches Auge</strong></td></tr>
+        <tr><td>Ultraviolett (UV)</td><td>10 – 380 nm</td><td>8×10¹⁴ – 3×10¹⁶</td><td>hoch</td><td>Sonnenbrand, Desinfektion</td></tr>
+        <tr><td>Röntgenstrahlung</td><td>0.01 – 10 nm</td><td>3×10¹⁶ – 3×10¹⁹</td><td>sehr hoch</td><td>Medizin, Materialprüfung</td></tr>
+        <tr><td>Gammastrahlung</td><td>&lt; 0.01 nm</td><td>&gt; 3×10¹⁹</td><td>extrem hoch</td><td>Kernreaktionen, Tumortherapie</td></tr>
+      </tbody>
+    </table>
+
+    <div class="merksatz">
+      Je <strong>kürzer</strong> die Wellenlänge, desto <strong>höher</strong> die Frequenz und desto
+      <strong>grösser</strong> die Energie der Strahlung. Gamma- und Röntgenstrahlen sind deshalb
+      biologisch gefährlich.
+    </div>
+
+    <!-- ---- 1.4 Simulation ---- -->
+    <h2 id="em-simulation">1.4 Interaktive Simulation: Wellenlänge &amp; Energie</h2>
+
+    <p>
+      Erkunde mit der PhET-Simulation von der Universität Colorado den Zusammenhang zwischen Wellenlänge,
+      Frequenz und Energie. Beobachte, wie sich Farbe und Energie ändern, wenn du den Schieberegler
+      für die Wellenlänge verschiebst.
+    </p>
+
+    <div class="sim-container">
+      <iframe
+        src="[phet.colorado.edu](https://phet.colorado.edu/sims/html/color-vision/latest/color-vision_de.html)"
+        allowfullscreen
+        title="PhET Simulation: Farbsehen und Wellenlänge">
+      </iframe>
+      <p class="sim-label">
+        🔬 PhET-Simulation „Farbsehen" – Universität Colorado (eingebettet, erfordert Internetverbindung)
+      </p>
+    </div>
+
+    <div class="aufgabe">
+      <div class="aufgabe-header">🧪 Simulationsaufgabe</div>
+      <ol>
+        <li>Stelle die Wellenlänge auf <strong>450 nm</strong> ein. Welche Farbe siehst du? Was passiert mit der Energie?</li>
+        <li>Vergleiche die Wellenlängen <strong>400 nm, 550 nm und 700 nm</strong>. Ordne sie nach aufsteigender Energie.</li>
+        <li>Was passiert mit der wahrgenommenen Farbe, wenn du die Intensität verringerst?</li>
+      </ol>
+    </div>
+
+    <!-- ---- 1.5 Übungsaufgaben ---- -->
+    <h2 id="em-aufgaben">1.5 Übungsaufgaben</h2>
+
+    <div class="aufgabe">
+      <div class="aufgabe-header">Aufgabe 1 – Berechnung</div>
+      <p>
+        Gelbes Natriumlicht hat eine Wellenlänge von <strong>λ = 589 nm</strong>.
+        Berechne die Frequenz dieser Strahlung. (c = 3.00 × 10<sup>8</sup> m/s)
+      </p>
+      <details style="margin-top:.7rem;">
+        <summary style="cursor:pointer; font-size:.88rem; color:var(--primary); font-weight:600;">💡 Lösung anzeigen</summary>
+        <div style="background:#f0f9ff; border-radius:6px; padding:.8rem 1rem; margin-top:.5rem; font-size:.88rem;">
+          ν = c / λ = (3.00 × 10⁸ m/s) / (589 × 10⁻⁹ m)
+          <br><strong>ν = 5.09 × 10¹⁴ Hz</strong>
+        </div>
+      </details>
+    </div>
+
+    <!-- Drag & Drop Zuordnung -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">Aufgabe 2 – Zuordnung: Wellenlängen &amp; Strahlungsarten</div>
+      <p>Ziehe jede Wellenlänge zur richtigen Strahlungsart.</p>
+
+      <div class="drag-container" id="drag-game">
+        <div class="drag-pool">
+          <h4>Wellenlängen</h4>
+          <span class="drag-item" draggable="true" data-value="gamma">0.001 nm</span>
+          <span class="drag-item" draggable="true" data-value="xray">0.5 nm</span>
+          <span class="drag-item" draggable="true" data-value="uv">250 nm</span>
+          <span class="drag-item" draggable="true" data-value="vis">520 nm</span>
+          <span class="drag-item" draggable="true" data-value="ir">10 000 nm</span>
+          <span class="drag-item" draggable="true" data-value="micro">5 cm</span>
+          <span class="drag-item" draggable="true" data-value="radio">300 m</span>
+        </div>
+
+        <div class="drop-zone-group">
+          <h4>Strahlungsart</h4>
+          <div class="drop-row">
+            <span class="drop-label">Gammastrahlung</span>
+            <div class="drop-target" data-accept="gamma"></div>
+          </div>
+          <div class="drop-row">
+            <span class="drop-label">Röntgenstrahlung</span>
+            <div class="drop-target" data-accept="xray"></div>
+          </div>
+          <div class="drop-row">
+            <span class="drop-label">Ultraviolett</span>
+            <div class="drop-target" data-accept="uv"></div>
+          </div>
+          <div class="drop-row">
+            <span class="drop-label">Sichtbares Licht</span>
+            <div class="drop-target" data-accept="vis"></div>
+          </div>
+          <div class="drop-row">
+            <span class="drop-label">Infrarot</span>
+            <div class="drop-target" data-accept="ir"></div>
+          </div>
+          <div class="drop-row">
+            <span class="drop-label">Mikrowellen</span>
+            <div class="drop-target" data-accept="micro"></div>
+          </div>
+          <div class="drop-row">
+            <span class="drop-label">Radiowellen</span>
+            <div class="drop-target" data-accept="radio"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-dragcheck" onclick="checkDrag()">Auswertung</button>
+      <button class="btn-dragreset" onclick="resetDrag()">Zurücksetzen</button>
+      <div class="drag-result" id="drag-result"></div>
+    </div>
+
+    <div class="zusammenfassung">
+      Elektromagnetische Strahlung breitet sich mit c = 3.00 × 10⁸ m/s aus.
+      Wellenlänge λ und Frequenz ν sind über c = λ·ν verknüpft. Weisses Licht ist ein Gemisch aller
+      sichtbaren Wellenlängen und kann durch Dispersion aufgespalten werden.
+      Kürzere Wellenlänge bedeutet höhere Energie.
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       KAPITEL 2: BOHRSCHES ATOMMODELL
+       ============================================================ -->
+  <section id="bohr">
+    <h1>2 · Bohrsches Atommodell &amp; Quantenmechanische Grundlagen</h1>
+
+    <div class="lernziele">
+      <h3>🎯 Lernziele</h3>
+      <ul>
+        <li>Den Begriff „Quantelung" erklären und auf Energie anwenden.</li>
+        <li>Ein Photon beschreiben und seine Energie mit E = h·ν berechnen.</li>
+        <li>Das Plancksche Wirkungsquantum h kennen und einsetzen.</li>
+        <li>Den Welle-Teilchen-Dualismus von Licht erläutern.</li>
+        <li>Das Bohr-Modell beschreiben und die drei Postulate formulieren.</li>
+        <li>Linienspektren und Flammenfärbung mithilfe des Bohr-Modells erklären.</li>
+        <li>Die erste Ionisierungsenergie in Abhängigkeit von Z interpretieren.</li>
+      </ul>
+    </div>
+
+    <!-- ---- 2.1 Gequantelte Energie & Photon ---- -->
+    <h2 id="bohr-quanten">2.1 Gequantelte Energie &amp; das Photon</h2>
+
+    <p>
+      Ende des 19. Jahrhunderts scheiterte die klassische Physik an einem scheinbar einfachen Problem:
+      Warum emittieren erhitzte Körper Licht mit einer bestimmten Intensitätsverteilung
+      (<em>schwarzer Strahler</em>)? Die klassische Theorie sagte voraus, dass ein heisser Körper
+      unendlich viel Energie im kurzwelligen Bereich abstrahlen müsste – eine absurde Schlussfolgerung,
+      die als <strong>Ultraviolettkatastrophe</strong> bekannt wurde.
+    </p>
+
+    <h3>Max Planck (1900): Energie wird in Paketen übertragen</h3>
+    <p>
+      Max Planck löste das Problem, indem er eine revolutionäre Annahme machte:
+      Energie kann nicht in beliebigen Mengen, sondern nur in <strong>diskreten Paketen (Quanten)</strong>
+      ausgetauscht werden. Ein solches Energiepaket der elektromagnetischen Strahlung nennt man
+      <strong>Photon</strong>.
+    </p>
+
+    <div class="merksatz">
+      <strong>Quantelung</strong> bedeutet: Eine physikalische Grösse (hier: Energie) kann nur ganz bestimmte,
+      diskrete Werte annehmen – nicht jeden beliebigen Wert.
+      Vergleich: Eine Treppe hat diskrete Stufen, keine schiefe Ebene.
+    </div>
+
+    <h3>Was ist ein Photon?</h3>
+    <p>
+      Ein <strong>Photon</strong> ist ein elementares Lichtteilchen – das kleinste nicht weiter teilbare
+      „Paket" elektromagnetischer Strahlung. Es hat keine Ruhemasse, bewegt sich immer mit
+      Lichtgeschwindigkeit und trägt eine definierte Energie, die von der Frequenz abhängt.
+    </p>
+
+    <div class="quiz-box">
+      <div class="quiz-title">❓ Schnellcheck 1</div>
+      <div class="quiz-question" id="q0">
+        <p>Was bedeutet es, dass Energie „gequantelt" ist?</p>
+        <label class="quiz-option"><input type="radio" name="q0" value="a"> Energie kann beliebige Werte annehmen.</label>
+        <label class="quiz-option"><input type="radio" name="q0" value="b"> Energie wird nur in diskreten Paketen übertragen.</label>
+        <label class="quiz-option"><input type="radio" name="q0" value="c"> Energie ist immer gleich gross.</label>
+        <label class="quiz-option"><input type="radio" name="q0" value="d"> Energie kann nicht gemessen werden.</label>
+        <div class="quiz-feedback" id="f0"></div>
+        <button class="btn-check" onclick="checkQ('q0','b','f0','Richtig! Quantelung bedeutet: nur diskrete, nicht beliebige Energiewerte sind möglich.','Nicht ganz. Gequantelt bedeutet: diskrete Pakete, keine kontinuierlichen Werte.')">Antwort prüfen</button>
+      </div>
+    </div>
+
+    <!-- ---- 2.2 Plancksches Wirkungsquantum ---- -->
+    <h2 id="bohr-planck">2.2 Das Plancksche Wirkungsquantum</h2>
+
+    <p>
+      Die Energie eines einzelnen Photons ist direkt proportional zu seiner Frequenz.
+      Der Proportionalitätsfaktor ist das <strong>Plancksche Wirkungsquantum h</strong>:
+    </p>
+
+    <div class="formula">
+      E = h · ν &nbsp;&nbsp;&nbsp; bzw. &nbsp;&nbsp;&nbsp; E = h · c / λ
+    </div>
+
+    <p style="font-size:.88rem; color:var(--muted); margin-top:-.4rem;">
+      h = 6.626 × 10<sup>–34</sup> J·s &nbsp;|&nbsp; ν in Hz &nbsp;|&nbsp; E in Joule
+    </p>
+
+    <p>
+      Das Wirkungsquantum h ist eine fundamentale Naturkonstante – eine der kleinsten bekannten
+      Grössen. Sie bestimmt, wie „körnig" die Natur auf quantenmechanischer Skala ist.
+    </p>
+
+    <div class="merksatz">
+      E = h · ν: Je höher die Frequenz (und je kürzer die Wellenlänge), desto grösser die Energie
+      eines einzelnen Photons. Ein UV-Photon trägt also mehr Energie als ein rotes Lichtphoton.
+    </div>
+
+    <div class="aufgabe">
+      <div class="aufgabe-header">Aufgabe – Photonenenergie</div>
+      <p>
+        Blaues Licht hat eine Wellenlänge von <strong>λ = 450 nm</strong>.
+        Berechne die Energie eines einzelnen Photons.
+        (h = 6.626 × 10<sup>–34</sup> J·s, c = 3.00 × 10<sup>8</sup> m/s)
+      </p>
+      <details style="margin-top:.7rem;">
+        <summary style="cursor:pointer; font-size:.88rem; color:var(--primary); font-weight:600;">💡 Lösung anzeigen</summary>
+        <div style="background:#f0f9ff; border-radius:6px; padding:.8rem 1rem; margin-top:.5rem; font-size:.88rem;">
+          E = h · c / λ<br>
+          E = (6.626 × 10<sup>–34</sup> J·s · 3.00 × 10<sup>8</sup> m/s) / (450 × 10<sup>–9</sup> m)<br>
+          <strong>E = 4.42 × 10<sup>–19</sup> J</strong>
+        </div>
+      </details>
+    </div>
+
+    <!-- ---- 2.3 Welle-Teilchen-Dualismus ---- -->
+    <h2 id="bohr-dualismus">2.3 Welle-Teilchen-Dualismus</h2>
+
+    <p>
+      Licht verhält sich in manchen Experimenten wie eine <strong>Welle</strong>
+      (Interferenz, Beugung) und in anderen wie ein <strong>Teilchen</strong>
+      (Photoelektrischer Effekt). Beide Beschreibungen sind nicht widersprüchlich, sondern
+      ergänzen sich – je nach Experiment zeigt Licht den einen oder anderen Aspekt.
+    </p>
+
+    <p>
+      Albert Einstein erklärte 1905 den <strong>Photoelektrischen Effekt</strong>
+      (wofür er 1921 den Nobelpreis erhielt): Licht kann Elektronen aus einem Metall herausschlagen –
+      aber nur, wenn die Frequenz hoch genug ist. Die Intensität ist dabei zweitrangig.
+      Das beweist, dass Licht in Paketen (Photonen) mit definierter Energie E = h·ν auftrifft.
+    </p>
+
+    <div class="merksatz">
+      Licht ist gleichzeitig Welle und Teilchen – je nach Beobachtungsmethode.
+      Diesen Sachverhalt nennt man <strong>Welle-Teilchen-Dualismus</strong>.
+      Er gilt auch für Elektronen und andere Quantenobjekte (de Broglie, 1924).
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-title">❓ Schnellcheck 2</div>
+      <div class="quiz-question" id="q1">
+        <p>Beim Photoelektrischen Effekt werden Elektronen aus einem Metall ausgelöst. Was entscheidet, ob Elektronen emittiert werden?</p>
+        <label class="quiz-option"><input type="radio" name="q1" value="a"> Die Intensität des Lichts.</label>
+        <label class="quiz-option"><input type="radio" name="q1" value="b"> Die Frequenz des Lichts.</label>
+        <label class="quiz-option"><input type="radio" name="q1" value="c"> Die Ausbreitungsgeschwindigkeit des Lichts.</label>
+        <label class="quiz-option"><input type="radio" name="q1" value="d"> Die Polarisation des Lichts.</label>
+        <div class="quiz-feedback" id="f1"></div>
+        <button class="btn-check" onclick="checkQ('q1','b','f1','Korrekt! Nur wenn die Frequenz hoch genug ist (E = hν ≥ Austrittsarbeit), werden Elektronen emittiert.','Nicht richtig. Es ist die Frequenz, nicht die Intensität, die entscheidet. Ein helles Rotlicht kann keine Elektronen auslösen, wenn rotes Licht zu niedrige Frequenz hat.')">Antwort prüfen</button>
+      </div>
+    </div>
+
+    <!-- ---- 2.4 Das Bohr-Modell ---- -->
+    <h2 id="bohr-modell">2.4 Das Bohr-Modell des Wasserstoffatoms</h2>
+
+    <p>
+      Niels Bohr kombinierte 1913 die klassische Mechanik mit der Quantelung von Planck und
+      entwickelte ein Atommodell, das die Linienspektren des Wasserstoffs erklären konnte.
+    </p>
+
+    <p>
+      Im Bohr-Modell kreisen Elektronen auf festen, erlaubten Kreisbahnen (<strong>Schalen</strong>)
+      um den Kern. Jede Schale entspricht einer bestimmten Hauptquantenzahl <em>n</em> = 1, 2, 3, …
+      und besitzt eine fest definierte Energie:
+    </p>
+
+    <div class="formula">
+      E<sub>n</sub> = –13.6 eV / n² &nbsp;&nbsp; (für Wasserstoff)
+    </div>
+
+    <p>
+      Das Vorzeichen ist negativ, weil das Elektron im gebundenen Zustand eine niedrigere Energie hat
+      als ein freies Elektron (E = 0). Je grösser n, desto höher (weniger negativ) ist die Energie
+      und desto weiter ist die Schale vom Kern entfernt.
+    </p>
+
+    <!-- SVG Energieniveaudiagramm -->
+    <div class="energy-diagram">
+      <svg width="500" height="300" viewBox="0 0 500 300" xmlns="[w3.org](http://www.w3.org/2000/svg)">
+        <!-- Achse -->
+        <line x1="60" y1="20" x2="60" y2="280" stroke="#aaa" stroke-width="1.5"/>
+        <text x="10" y="15" fill="#aaa" font-size="11" font-family="Arial">E (eV)</text>
+
+        <!-- Ionisierungsgrenze -->
+        <line x1="60" y1="25" x2="460" y2="25" stroke="#ff6b6b" stroke-width="1" stroke-dasharray="4"/>
+        <text x="62" y="21" fill="#ff6b6b" font-size="10" font-family="Arial">E = 0 (ionisiert)</text>
+
+        <!-- n=1 E=-13.6 -->
+        <line x1="80" y1="268" x2="320" y2="268" stroke="#7ec8e3" stroke-width="2"/>
+        <text x="325" y="272" fill="#7ec8e3" font-size="11" font-family="Arial">n=1  –13.6 eV</text>
+        <text x="62"  y="272" fill="#aaa"  font-size="10" font-family="Arial">–13.6</text>
+
+        <!-- n=2 E=-3.4 -->
+        <line x1="80" y1="196" x2="320" y2="196" stroke="#7ec8e3" stroke-width="2"/>
+        <text x="325" y="200" fill="#7ec8e3" font-size="11" font-family="Arial">n=2  –3.4 eV</text>
+        <text x="62"  y="200" fill="#aaa"  font-size="10" font-family="Arial">–3.4</text>
+
+        <!-- n=3 E=-1.51 -->
+        <line x1="80" y1="155" x2="320" y2="155" stroke="#7ec8e3" stroke-width="2"/>
+        <text x="325" y="159" fill="#7ec8e3" font-size="11" font-family="Arial">n=3  –1.5 eV</text>
+        <text x="62"  y="159" fill="#aaa"  font-size="10" font-family="Arial">–1.5</text>
+
+        <!-- n=4 E=-0.85 -->
+        <line x1="80" y1="130" x2="320" y2="130" stroke="#7ec8e3" stroke-width="2"/>
+        <text x="325" y="134" fill="#7ec8e3" font-size="11" font-family="Arial">n=4  –0.85 eV</text>
+        <text x="62"  y="134" fill="#aaa"  font-size="10" font-family="Arial">–0.85</text>
+
+        <!-- n=5 -->
+        <line x1="80" y1="110" x2="320" y2="110" stroke="#7ec8e3" stroke-width="1.2" stroke-dasharray="3"/>
+        <text x="325" y="114" fill="#7ec8e3" font-size="10" font-family="Arial">n=5  …</text>
+
+        <!-- Pfeil Emission n=3→n=2 (Hα, rot) -->
+        <line x1="160" y1="196" x2="160" y2="155" stroke="#ff6b6b" stroke-width="2" marker-end="url(#arr)"/>
+        <text x="163" y="178" fill="#ff6b6b" font-size="10" font-family="Arial">Hα 656 nm</text>
+
+        <!-- Pfeil Emission n=4→n=2 (Hβ, blau) -->
+        <line x1="210" y1="196" x2="210" y2="130" stroke="#74b9ff" stroke-width="2" marker-end="url(#arr2)"/>
+        <text x="213" y="165" fill="#74b9ff" font-size="10" font-family="Arial">Hβ 486 nm</text>
+
+        <defs>
+          <marker id="arr"  markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#ff6b6b"/>
+          </marker>
+          <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#74b9ff"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <!-- ---- 2.5 Postulate ---- -->
+    <h2 id="bohr-postulate">2.5 Die drei Postulate von Bohr</h2>
+
+    <p>
+      Bohr formulierte drei Annahmen (Postulate), die er der klassischen Physik hinzufügte,
+      um sein Modell zu begründen:
+    </p>
+
+    <div class="postulat-grid">
+      <div class="postulat-card">
+        <div class="pnum">Postulat 1 – Stationäre Zustände</div>
+        <p>
+          Elektronen bewegen sich auf bestimmten, stabilen Kreisbahnen um den Kern,
+          ohne Energie abzustrahlen. Jede Bahn entspricht einem diskreten Energieniveau.
+        </p>
+      </div>
+      <div class="postulat-card">
+        <div class="pnum">Postulat 2 – Quantenbedingung</div>
+        <p>
+          Erlaubt sind nur solche Bahnen, bei denen der Drehimpuls des Elektrons ein
+          ganzzahliges Vielfaches von h/(2π) ist:
+          m·v·r = n·ℏ &nbsp;(n = 1,2,3,…)
+        </p>
+      </div>
+      <div class="postulat-card">
+        <div class="pnum">Postulat 3 – Quantensprung</div>
+        <p>
+          Ein Elektron kann zwischen zwei Bahnen wechseln. Beim Sprung auf eine tiefere Bahn
+          emittiert es ein Photon der Energie ΔE = E<sub>oben</sub> – E<sub>unten</sub> = h·ν.
+        </p>
+      </div>
+    </div>
+
+    <div class="merksatz">
+      Beim Übergang von einer höheren auf eine tiefere Schale wird ein Photon
+      <strong>emittiert</strong>; beim Übergang von einer tieferen auf eine höhere Schale
+      wird ein Photon <strong>absorbiert</strong>. Die Wellenlänge des Photons ist eindeutig
+      durch die Energiedifferenz bestimmt: ΔE = h·c/λ.
+    </div>
+
+    <div class="quiz-box">
+      <div class="quiz-title">❓ Schnellcheck 3</div>
+      <div class="quiz-question" id="q2">
+        <p>Ein Elektron springt von n = 4 auf n = 2. Was geschieht dabei?</p>
+        <label class="quiz-option"><input type="radio" name="q2" value="a"> Das Atom absorbiert ein Photon.</label>
+        <label class="quiz-option"><input type="radio" name="q2" value="b"> Das Atom emittiert ein Photon.</label>
+        <label class="quiz-option"><input type="radio" name="q2" value="c"> Kein Photon wird ausgetauscht.</label>
+        <label class="quiz-option"><input type="radio" name="q2" value="d"> Das Elektron verlässt das Atom.</label>
+        <div class="quiz-feedback" id="f2"></div>
+        <button class="btn-check" onclick="checkQ('q2','b','f2','Richtig! Der Sprung auf eine tiefere Schale setzt Energie frei → Photon wird emittiert (Hβ-Linie, blaues Licht).','Nicht ganz. Übergang zu tieferer Schale = Energieabgabe = Emission eines Photons.')">Antwort prüfen</button>
+      </div>
+    </div>
+
+    <!-- ---- 2.6 Linienspektren ---- -->
+    <h2 id="bohr-linien">2.6 Linienspektren &amp; Flammenfärbung</h2>
+
+    <p>
+      Jedes Element besitzt ein einzigartiges <strong>Linienspektrum</strong>:
+      Beim Anregen von Atomen (z.B. in einer Gasentladungsröhre oder Flamme) emittieren die Elektronen
+      Photonen ganz bestimmter Wellenlängen. Diese Wellenlängen sind für jedes Element charakteristisch
+      und dienen als atomarer „Fingerabdruck".
+    </p>
+
+    <p>
+      Bei der <strong>Flammenfärbung</strong> wird eine Probe in eine Flamme gehalten.
+      Die Wärmeenergie regt die Elektronen auf höhere Niveaus an; beim Zurückfallen emittieren sie
+      sichtbares Licht. Natrium leuchtet charakteristisch gelb (589 nm),
+      Kalium violett, Kupfer grün-blau.
+    </p>
+
+    <div class="merksatz">
+      Linienspektren beweisen, dass Elektronen in Atomen nur diskrete Energieniveaus besetzen können.
+      Das kontinuierliche Spektrum weissen Lichts steht im Gegensatz zum
+      Linienspektrum eines angeregten Gases.
+    </div>
+
+    <!-- ---- 2.7 Quiz ---- -->
+    <h2 id="bohr-quiz">2.7 Quiz &amp; Kontrollfragen</h2>
+
+    <div class="quiz-box">
+      <div class="quiz-title">❓ Kontrollfragen – Kapitel 2</div>
+
+      <div class="quiz-question" id="q3">
+        <p>1) Welchen Wert hat das Plancksche Wirkungsquantum h?</p>
+        <label class="quiz-option"><input type="radio" name="q3" value="a"> 6.022 × 10⁻²³ J·s</label>
+        <label class="quiz-option"><input type="radio" name="q3" value="b"> 6.626 × 10⁻³⁴ J·s</label>
+        <label class="quiz-option"><input type="radio" name="q3" value="c"> 1.381 × 10⁻²³ J/K</label>
+        <label class="quiz-option"><input type="radio" name="q3" value="d"> 9.109 × 10⁻³¹ kg</label>
+        <div class="quiz-feedback" id="f3"></div>
+        <button class="btn-check" onclick="checkQ('q3','b','f3','Korrekt! h = 6.626 × 10⁻³⁴ J·s (die anderen Werte sind Avogadro-Konstante, Boltzmann-Konstante, Elektronenmasse).','Nicht korrekt. h = 6.626 × 10⁻³⁴ J·s.')">Prüfen</button>
+      </div>
+
+      <div class="quiz-question" id="q4" style="margin-top:1rem;">
+        <p>2) Warum zeigen Atome Linienspektren statt kontinuierlicher Spektren?</p>
+        <label class="quiz-option"><input type="radio" name="q4" value="a"> Weil Atome nur bei bestimmten Temperaturen leuchten.</label>
+        <label class="quiz-option"><input type="radio" name="q4" value="b"> Weil Elektronen nur diskrete Energieniveaus besetzen können.</label>
+        <label class="quiz-option"><input type="radio" name="q4" value="c"> Weil die Wellenlänge von der Masse des Atoms abhängt.</label>
+        <label class="quiz-option"><input type="radio" name="q4" value="d"> Weil Photonen keine Energie tragen.</label>
+        <div class="quiz-feedback" id="f4"></div>
+        <button class="btn-check" onclick="checkQ('q4','b','f4','Richtig! Diskrete Energieniveaus führen zu diskreten Photonenenergien und damit zu Linienspektren.','Nicht korrekt. Der Grund ist die Quantelung der Energieniveaus.')">Prüfen</button>
+      </div>
+
+      <div class="quiz-question" id="q5" style="margin-top:1rem;">
+        <p>3) Was bewirkt eine kürzere Wellenlänge des emittierten Photons?</p>
+        <label class="quiz-option"><input type="radio" name="q5" value="a"> Kleinerer Energieübergang zwischen den Niveaus.</label>
+        <label class="quiz-option"><input type="radio" name="q5" value="b"> Grösserer Energieübergang zwischen den Niveaus.</label>
+        <label class="quiz-option"><input type="radio" name="q5" value="c"> Keine Änderung der Energie.</label>
+        <label class="quiz-option"><input type="radio" name="q5" value="d"> Das Elektron verlässt das Atom.</label>
+        <div class="quiz-feedback" id="f5"></div>
+        <button class="btn-check" onclick="checkQ('q5','b','f5','Genau! Kürzere Wellenlänge → höhere Frequenz → mehr Energie pro Photon → grösserer Niveausprung.','Nicht korrekt. E = hc/λ: kürzere λ bedeutet mehr Energie, also grösserer Übergang.')">Prüfen</button>
+      </div>
+    </div>
+
+    <!-- ---- 2.8 Anwendungsaufgabe (Ionisierungsenergie) ---- -->
+    <h2 id="bohr-anwendung">2.8 Anwendungsaufgabe: Erste Ionisierungsenergie</h2>
+
+    <p>
+      Das folgende Diagramm zeigt die <strong>erste Ionisierungsenergie E<sub>I,1</sub></strong>
+      als Funktion der Ordnungszahl Z. Die erste Ionisierungsenergie ist die Energie, die benötigt
+      wird, um einem Atom im Grundzustand ein Elektron zu entreissen.
+    </p>
+
+    <!-- Interaktives SVG-Diagramm der Ionisierungsenergie -->
+    <div style="background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:1rem; overflow-x:auto; margin:1rem 0;">
+      <svg id="ion-svg" viewBox="0 0 520 310" xmlns="[w3.org](http://www.w3.org/2000/svg)" style="width:100%; max-width:520px; display:block; margin:0 auto;">
+        <!-- Gitter -->
+        <defs>
+          <line id="hl"/>
+        </defs>
+        <!-- Horizontale Gitterlinien -->
+        <line x1="50" y1="270" x2="500" y2="270" stroke="#eee" stroke-width="1"/>
+        <line x1="50" y1="230" x2="500" y2="230" stroke="#eee" stroke-width="1"/>
+        <line x1="50" y1="190" x2="500" y2="190" stroke="#eee" stroke-width="1"/>
+        <line x1="50" y1="150" x2="500" y2="150" stroke="#eee" stroke-width="1"/>
+        <line x1="50" y1="110" x2="500" y2="110" stroke="#eee" stroke-width="1"/>
+        <line x1="50" y1="70"  x2="500" y2="70"  stroke="#eee" stroke-width="1"/>
+        <line x1="50" y1="30"  x2="500" y2="30"  stroke="#eee" stroke-width="1"/>
+        <!-- Achsen -->
+        <line x1="50" y1="20" x2="50"  y2="285" stroke="#333" stroke-width="1.5"/>
+        <line x1="50" y1="280" x2="505" y2="280" stroke="#333" stroke-width="1.5"/>
+        <!-- Y-Beschriftungen (0–30 eV, 10 eV pro 80px) -->
+        <text x="43" y="283" fill="#666" font-size="9" text-anchor="end">0</text>
+        <text x="43" y="243" fill="#666" font-size="9" text-anchor="end">5</text>
+        <text x="43" y="203" fill="#666" font-size="9" text-anchor="end">10</text>
+        <text x="43" y="163" fill="#666" font-size="9" text-anchor="end">15</text>
+        <text x="43" y="123" fill="#666" font-size="9" text-anchor="end">20</text>
+        <text x="43" y="83"  fill="#666" font-size="9" text-anchor="end">25</text>
+        <text x="43" y="43"  fill="#666" font-size="9" text-anchor="end">30</text>
+        <!-- Y-Achse Label -->
+        <text x="12" y="160" fill="#333" font-size="10" transform="rotate(-90,12,160)" text-anchor="middle">E_I,1 in eV</text>
+        <!-- X-Beschriftungen Z = 1..18 -->
+        <!-- Spacing: x = 50 + (Z-1)*26 -->
+        <text x="50"  y="294" fill="#666" font-size="9" text-anchor="middle">1</text>
+        <text x="76"  y="294" fill="#666" font-size="9" text-anchor="middle">2</text>
+        <text x="102" y="294" fill="#666" font-size="9" text-anchor="middle">3</text>
+        <text x="128" y="294" fill="#666" font-size="9" text-anchor="middle">4</text>
+        <text x="154" y="294" fill="#666" font-size="9" text-anchor="middle">5</text>
+        <text x="180" y="294" fill="#666" font-size="9" text-anchor="middle">6</text>
+        <text x="206" y="294" fill="#666" font-size="9" text-anchor="middle">7</text>
+        <text x="232" y="294" fill="#666" font-size="9" text-anchor="middle">8</text>
+        <text x="258" y="294" fill="#666" font-size="9" text-anchor="middle">9</text>
+        <text x="284" y="294" fill="#666" font-size="9" text-anchor="middle">10</text>
+        <text x="310" y="294" fill="#666" font-size="9" text-anchor="middle">11</text>
+        <text x="336" y="294" fill="#666" font-size="9" text-anchor="middle">12</text>
+        <text x="362" y="294" fill="#666" font-size="9" text-anchor="middle">13</text>
+        <text x="388" y="294" fill="#666" font-size="9" text-anchor="middle">14</text>
+        <text x="414" y="294" fill="#666" font-size="9" text-anchor="middle">15</text>
+        <text x="440" y="294" fill="#666" font-size="9" text-anchor="middle">16</text>
+        <text x="466" y="294" fill="#666" font-size="9" text-anchor="middle">17</text>
+        <text x="492" y="294" fill="#666" font-size="9" text-anchor="middle">18</text>
+        <text x="275" y="308" fill="#333" font-size="10" text-anchor="middle">Ordnungszahl Z</text>
+
+        <!-- Datenpunkte: y = 280 - (Ei/30)*250 -->
+        <!-- Ei values (eV): H=13.6 He=24.6 Li=5.4 Be=9.3 B=8.3 C=11.3 N=14.5 O=13.6 F=17.4 Ne=21.6 Na=5.1 Mg=7.6 Al=6.0 Si=8.2 P=10.5 S=10.4 Cl=13.0 Ar=15.8 -->
+        <polyline
+          points="
+            50,169
+            76,74
+            102,235
+            128,204
+            154,211
+            180,186
+            206,160
+            232,166
+            258,142
+            284,100
+            310,237
+            336,217
+            362,230
+            388,212
+            414,192
+            440,193
+            466,171
+            492,148"
+          fill="none" stroke="#e84393" stroke-width="2"/>
+
+        <!-- Dots with tooltips -->
+        <g id="ion-dots">
+          <circle class="ion-dot" cx="50"  cy="169" r="5" fill="#e84393" data-z="1"  data-e="13.6" data-s="H"/>
+          <circle class="ion-dot" cx="76"  cy="74"  r="5" fill="#e84393" data-z="2"  data-e="24.6" data-s="He"/>
+          <circle class="ion-dot" cx="102" cy="235" r="5" fill="#e84393" data-z="3"  data-e="5.4"  data-s="Li"/>
+          <circle class="ion-dot" cx="128" cy="204" r="5" fill="#e84393" data-z="4"  data-e="9.3"  data-s="Be"/>
+          <circle class="ion-dot" cx="154" cy="211" r="5" fill="#e84393" data-z="5"  data-e="8.3"  data-s="B"/>
+          <circle class="ion-dot" cx="180" cy="186" r="5" fill="#e84393" data-z="6"  data-e="11.3" data-s="C"/>
+          <circle class="ion-dot" cx="206" cy="160" r="5" fill="#e84393" data-z="7"  data-e="14.5" data-s="N"/>
+          <circle class="ion-dot" cx="232" cy="166" r="5" fill="#e84393" data-z="8"  data-e="13.6" data-s="O"/>
+          <circle class="ion-dot" cx="258" cy="142" r="5" fill="#e84393" data-z="9"  data-e="17.4" data-s="F"/>
+          <circle class="ion-dot" cx="284" cy="100" r="5" fill="#e84393" data-z="10" data-e="21.6" data-s="Ne"/>
+          <circle class="ion-dot" cx="310" cy="237" r="5" fill="#e84393" data-z="11" data-e="5.1"  data-s="Na"/>
+          <circle class="ion-dot" cx="336" cy="217" r="5" fill="#e84393" data-z="12" data-e="7.6"  data-s="Mg"/>
+          <circle class="ion-dot" cx="362" cy="230" r="5" fill="#e84393" data-z="13" data-e="6.0"  data-s="Al"/>
+          <circle class="ion-dot" cx="388" cy="212" r="5" fill="#e84393" data-z="14" data-e="8.2"  data-s="Si"/>
+          <circle class="ion-dot" cx="414" cy="192" r="5" fill="#e84393" data-z="15" data-e="10.5" data-s="P"/>
+          <circle class="ion-dot" cx="440" cy="193" r="5" fill="#e84393" data-z="16" data-e="10.4" data-s="S"/>
+          <circle class="ion-dot" cx="466" cy="171" r="5" fill="#e84393" data-z="17" data-e="13.0" data-s="Cl"/>
+          <circle class="ion-dot" cx="492" cy="148" r="5" fill="#e84393" data-z="18" data-e="15.8" data-s="Ar"/>
+        </g>
+
+        <!-- Tooltip-Rechteck -->
+        <g id="ion-tooltip" style="display:none;">
+          <rect id="tt-bg" x="0" y="0" width="110" height="42" rx="6" fill="#1a1a2e" opacity=".88"/>
+          <text id="tt-sym" x="10" y="16" fill="#fff" font-size="11" font-weight="bold" font-family="Arial"></text>
+          <text id="tt-ei"  x="10" y="30" fill="#e84393" font-size="10" font-family="Arial"></text>
+        </g>
+      </svg>
+      <p style="font-size:.78rem; color:var(--muted); text-align:center; margin-top:.3rem;">
+        Interaktiv: Fahre mit der Maus über einen Datenpunkt für Details.
+      </p>
+    </div>
+
+    <!-- Aufgaben a und b -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">Aufgabe a) – Lokale Maxima und Minima</div>
+      <p>
+        Erläutere, welche Hinweise das Diagramm über den Aufbau der Elektronenhülle gibt.
+        Gehe dabei auf die <strong>lokalen Maxima bei Z = 2 und Z = 10</strong>
+        sowie die darauf folgenden Minima ein.
+      </p>
+      <details style="margin-top:.7rem;">
+        <summary style="cursor:pointer; font-size:.88rem; color:var(--primary); font-weight:600;">💡 Musterlösung anzeigen</summary>
+        <div style="background:#f0f9ff; border-radius:6px; padding:.9rem 1.1rem; margin-top:.5rem; font-size:.88rem; line-height:1.65;">
+          <strong>Maxima bei Z = 2 (He) und Z = 10 (Ne):</strong><br>
+          Helium und Neon sind <strong>Edelgase mit vollständig besetzten Schalen</strong>
+          (He: 1s², Ne: 2p⁶). Die vollständige Schale ist besonders stabil (geringe
+          elektrostatische Abstoßung, starke Kernabschirmung) → besonders hohe Ionisierungsenergie.
+          <br><br>
+          <strong>Minimum nach Z = 2 (→ Li, Z = 3):</strong><br>
+          Bei Lithium beginnt eine <strong>neue Schale</strong> (n = 2). Das einzige Elektron
+          in der äusseren Schale ist gut von der gefüllten n = 1-Schale abgeschirmt.
+          Ausserdem ist es im Mittel weiter vom Kern entfernt → deutlich tiefere Ionisierungsenergie.
+          <br><br>
+          <strong>Minimum nach Z = 10 (→ Na, Z = 11):</strong><br>
+          Bei Natrium beginnt die <strong>dritte Schale</strong> (n = 3). Dasselbe Prinzip:
+          das neue äussere Elektron ist weit vom Kern entfernt und abgeschirmt → tiefe E<sub>I,1</sub>.
+          <br><br>
+          <strong>Fazit:</strong> Die periodische Wiederkehr von Maxima und Minima spiegelt
+          die <em>Schalenstruktur der Elektronenhülle</em> direkt wider.
+        </div>
+      </details>
+    </div>
+
+    <div class="aufgabe">
+      <div class="aufgabe-header">Aufgabe b) – Zweite Ionisierungsenergie</div>
+      <p>
+        Die zweite Ionisierungsenergie E<sub>I,2</sub> ist die Energie, um dem einfach positiv
+        geladenen Ion im Grundzustand ein weiteres Elektron zu entreissen.
+        <br><br>
+        Beschreibe (für Z &gt; 1) qualitativ den Verlauf der <strong>zweiten Ionisierungsenergie</strong>
+        im Vergleich zur ersten.
+      </p>
+      <details style="margin-top:.7rem;">
+        <summary style="cursor:pointer; font-size:.88rem; color:var(--primary); font-weight:600;">💡 Musterlösung anzeigen</summary>
+        <div style="background:#f0f9ff; border-radius:6px; padding:.9rem 1.1rem; margin-top:.5rem; font-size:.88rem; line-height:1.65;">
+          <strong>Allgemein:</strong> E<sub>I,2</sub> &gt; E<sub>I,1</sub>, weil das Ion nach der ersten
+          Ionisierung eine positive Ladung trägt und das verbleibende Elektron stärker angezogen wird.
+          <br><br>
+          <strong>Verlauf:</strong><br>
+          • Der Kurvenverlauf ist <em>um eine Einheit zu höheren Z verschoben</em>:
+            Das Maximum der zweiten Ionisierungsenergie liegt bei Z = 3 (Li⁺ hat
+            eine vollständige n=1-Schale), das nächste bei Z = 11 (Na⁺ hat eine
+            vollständige n=2-Schale).<br>
+          • Ein <strong>besonders grosser Sprung</strong> tritt auf, wenn das zweite Elektron
+            aus einer <em>inneren, vollständig besetzten Schale</em> entfernt werden muss
+            (z.B. bei Z = 3: Li hat nur 1 Valenzelektron – das zweite stammt aus der
+            vollständigen K-Schale → drastisch höhere E<sub>I,2</sub>).<br>
+          • Dies ist die Grundlage für die Bestimmung der Valenzelektronenzahl aus
+            dem Ionisierungsenergieprofil.
+        </div>
+      </details>
+    </div>
+
+    <div class="zusammenfassung">
+      Das Bohr-Modell erklärt gequantelte Energieniveaus, Linienspektren und die Periodizität
+      der Ionisierungsenergie. E = h·ν verknüpft Photonenergie und Frequenz. Elektronen springen
+      zwischen diskreten Niveaus – Emission bei Übergang nach unten, Absorption nach oben.
+      Die lokalen Maxima der ersten Ionisierungsenergie markieren vollständig besetzte Schalen
+      (Edelgaskonfigurationen), die Minima den Beginn neuer Schalen.
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ============================= JAVASCRIPT ============================= -->
+<script>
+  /* ---- Scroll Progress ---- */
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const top = doc.scrollTop || document.body.scrollTop;
+    const height = doc.scrollHeight - doc.clientHeight;
+    document.getElementById('progress-bar').style.width = (top / height * 100) + '%';
+  });
+
+  /* ---- Mobile Sidebar ---- */
+  const toggle = document.getElementById('menu-toggle');
+  const sidebar = document.getElementById('sidebar');
+  if (toggle) {
+    toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+    document.addEventListener('click', e => {
+      if (!sidebar.contains(e.target) && e.target !== toggle)
+        sidebar.classList.remove('open');
+    });
+  }
+
+  /* ---- Active nav link on scroll ---- */
+  const sections = document.querySelectorAll('section, h2[id]');
+  const navLinks = document.querySelectorAll('#sidebar nav a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { rootMargin: '-30% 0px -65% 0px' });
+
+  document.querySelectorAll('[id]').forEach(el => observer.observe(el));
+
+  /* ---- MC Quiz Checker ---- */
+  function checkQ(qId, correct, feedbackId, okMsg, nokMsg) {
+    const selected = document.querySelector(`input[name="${qId}"]:checked`);
+    const fb = document.getElementById(feedbackId);
+    const options = document.querySelectorAll(`input[name="${qId}"]`);
+    if (!selected) { fb.textContent = 'Bitte eine Antwort auswählen.'; fb.className = 'quiz-feedback show nok'; return; }
+    options.forEach(o => {
+      const label = o.closest('.quiz-option');
+      if (o.value === correct) label.classList.add('correct');
+      else if (o.checked) label.classList.add('wrong');
+      o.disabled = true;
+    });
+    const isOk = selected.value === correct;
+    fb.textContent = (isOk ? '✅ ' : '❌ ') + (isOk ? okMsg : nokMsg);
+    fb.className = 'quiz-feedback show ' + (isOk ? 'ok' : 'nok');
+  }
+
+  /* ---- Drag & Drop ---- */
+  let draggedItem = null;
+
+  document.querySelectorAll('.drag-item').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      draggedItem = e.target;
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => { draggedItem = null; });
+  });
+
+  document.querySelectorAll('.drop-target').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      zone.classList.add('over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      if (draggedItem && !zone.querySelector('.drag-item')) {
+        // Remove from previous zone if any
+        const old = zone.querySelector('.drag-item');
+        if (old) {
+          old.classList.remove('placed');
+          document.querySelector('.drag-pool').appendChild(old);
+        }
+        zone.appendChild(draggedItem);
+        draggedItem.classList.add('placed');
+        draggedItem.setAttribute('draggable', 'false');
+      }
+    });
+  });
+
+  function checkDrag() {
+    let correct = 0, total = 0;
+    document.querySelectorAll('.drop-target').forEach(zone => {
+      const item = zone.querySelector('.drag-item');
+      total++;
+      if (item) {
+        const isCorrect = item.dataset.value === zone.dataset.accept;
+        zone.classList.remove('correct-drop','wrong-drop');
+        zone.classList.add(isCorrect ? 'correct-drop' : 'wrong-drop');
+        if (isCorrect) correct++;
+      } else {
+        zone.classList.remove('correct-drop','wrong-drop');
+      }
+    });
+    const res = document.getElementById('drag-result');
+    res.style.display = 'block';
+    res.textContent = correct === total
+      ? `🎉 Perfekt! Alle ${total} Zuordnungen korrekt.`
+      : `Du hast ${correct} von ${total} richtig. Überprüfe die rot markierten Felder.`;
+    res.style.color = correct === total ? '#166534' : '#991b1b';
+  }
+
+  function resetDrag() {
+    const pool = document.querySelector('.drag-pool');
+    document.querySelectorAll('.drop-target').forEach(zone => {
+      zone.classList.remove('correct-drop','wrong-drop','over');
+      const item = zone.querySelector('.drag-item');
+      if (item) {
+        item.classList.remove('placed');
+        item.setAttribute('draggable', 'true');
+        pool.appendChild(item);
+      }
+    });
+    const res = document.getElementById('drag-result');
+    res.style.display = 'none';
+    // Re-attach dragstart (needed after reset)
+    document.querySelectorAll('.drag-item').forEach(item => {
+      item.ondragstart = e => {
+        draggedItem = e.target;
+        e.dataTransfer.effectAllowed = 'move';
+      };
+      item.ondragend = () => { draggedItem = null; };
+    });
+  }
+
+  /* ---- Ionisierungsenergie SVG Tooltip ---- */
+  const tooltip  = document.getElementById('ion-tooltip');
+  const ttBg     = document.getElementById('tt-bg');
+  const ttSym    = document.getElementById('tt-sym');
+  const ttEi     = document.getElementById('tt-ei');
+  const svgEl    = document.getElementById('ion-svg');
+
+  document.querySelectorAll('.ion-dot').forEach(dot => {
+    dot.style.cursor = 'pointer';
+    dot.addEventListener('mouseenter', function(e) {
+      const cx = parseFloat(this.getAttribute('cx'));
+      const cy = parseFloat(this.getAttribute('cy'));
+      const z  = this.dataset.z;
+      const ei = this.dataset.e;
+      const sym= this.dataset.s;
+
+      // Position tooltip near dot
+      let tx = cx + 8, ty = cy - 48;
+      if (tx + 115 > 520) tx = cx - 125;
+      if (ty < 5) ty = cy + 10;
+
+      ttBg.setAttribute('x', tx);
+      ttBg.setAttribute('y', ty);
+      ttSym.setAttribute('x', tx + 8);
+      ttSym.setAttribute('y', ty + 16);
+      ttEi.setAttribute('x', tx + 8);
+      ttEi.setAttribute('y', ty + 30);
+
+      ttSym.textContent = `Z=${z}  ${sym}`;
+      ttEi.textContent  = `E_I,1 = ${ei} eV`;
+      tooltip.style.display = 'block';
+    });
+    dot.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+    });
+  });
+</script>
+</body>
+</html>
